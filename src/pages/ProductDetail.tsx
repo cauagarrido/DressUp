@@ -72,7 +72,7 @@ export default function ProductDetail() {
             {product.category === 'acessorio' && '💎'}
           </div>
           <div className="grid grid-cols-4 gap-2">
-            {product.images.map((img, idx) => (
+            {product.images.map((_, idx) => (
               <div
                 key={idx}
                 className="bg-surface-highlight border border-brand-primary/10 rounded-xl h-20 flex items-center justify-center text-brand-primary font-semibold"

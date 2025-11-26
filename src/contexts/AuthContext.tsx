@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 
 interface AuthContextType {
   isAuthenticated: boolean
@@ -12,14 +12,19 @@ const allowedUsers = [
   { username: 'cliente', password: '12345', role: 'cliente' as const },
 ]
 
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('isAuthenticated') === 'true'
   })
+  
+  
   const [user, setUser] = useState<AuthContextType['user']>(() => {
     const stored = localStorage.getItem('currentUser')
+    
     return stored ? JSON.parse(stored) : null
   })
 
@@ -31,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (match) {
       setIsAuthenticated(true)
       setUser({ username: match.username, role: match.role })
+     
       localStorage.setItem('isAuthenticated', 'true')
       localStorage.setItem(
         'currentUser',
@@ -44,6 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setIsAuthenticated(false)
     setUser(null)
+    
     localStorage.removeItem('isAuthenticated')
     localStorage.removeItem('currentUser')
   }
@@ -58,8 +65,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
+    
     throw new Error('useAuth must be used within an AuthProvider')
   }
-  return context
+  
+  return context as AuthContextType 
 }
-
